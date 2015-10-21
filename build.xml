@@ -1,0 +1,103 @@
+<project name="Handler-Demo" default="dist" basedir=".">
+
+
+	<description>
+        Handler demo to test and try Handler implementation
+    </description>
+	
+	
+	<property file="build.properties" />
+
+	<!-- set global properties for this build -->
+	<property name="projectName" value="HandlerDemo"/>
+	<property name="src" location="src/main/java"/>
+	<property name="build" location="build"/>
+	<property name="dist"  location="dist"/>
+	<property name="bin" location="custom-bin"/>
+	
+	<property name="lib" location="lib"/>
+	<property name="webcontent"  location="src/main/web"/>
+	<property name="jaxws.lib.dir" location="${lib}/jax-ws" />
+	<property name="binding"  location="src/main/resources/binding" />
+	<property name="wsdlfile"  location="src/main/resources/wsdl/HandlerTestService.wsdl" />
+
+	<target name="init">
+		<!-- Create the time stamp -->
+		<tstamp/>
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${build}"/>
+	</target>
+
+	<target name="compile" depends="init"
+  		description="compile the source " >
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac srcdir="${src}" destdir="${build}"/>
+	</target>
+
+	<target name="dist" depends="compile"
+  		description="generate the distribution" >
+
+		<!-- Create the distribution directory -->
+		<mkdir dir="${dist}/lib"/>
+
+		<!-- Put everything in ${build} into the {$projectName}-${DSTAMP}.jar file -->
+		<jar jarfile="${dist}/lib/${projectName}-${DSTAMP}.jar" basedir="${build}"/>
+	</target>
+
+	<target name="war" depends="compile"
+  		description="generate the distribution war" >
+
+		<!-- Create the war distribution directory -->
+		<mkdir dir="${dist}/war"/>
+
+		<!-- Follow standard WAR structure -->
+		<copydir dest="${dist}/war/build/WEB-INF/" src="${webcontent}/WEB-INF/" />
+		<copydir dest="${dist}/war/build/WEB-INF/classes/" src="${build}" />
+
+		<jar jarfile="${dist}/war/${projectName}-${DSTAMP}.war" basedir="${dist}/war/build/"/>
+	</target>
+
+	<target name="clean"
+    	description="clean up" >
+
+		<!-- Delete the ${build} and ${dist} directory trees -->
+		<delete dir="${build}"/>
+		<delete dir="${dist}"/>
+	</target>
+
+	<path id="jaxws-classpath">
+		<fileset dir="${jaxws.lib.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+	
+	<target name="ws:import:taskdef">
+		
+		<taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport">
+			<classpath>
+				<path refid="jaxws-classpath" />
+			</classpath>
+		</taskdef>
+	</target>
+
+	<target name="ws:clean">
+		<delete dir="${src}" />
+		<mkdir dir="${src}"/>
+		<delete dir="${build}" />
+		<mkdir dir="${build}"/>
+	</target>
+
+	<target name="ws:generate" depends="ws:import:taskdef, ws:clean">
+		<wsimport           
+					wsdl="${wsdlfile}"      
+					destdir="${bin}"
+					sourcedestdir="${src}"
+					verbose="true"
+					package="com.kthree.ws">
+			<!-- configuring jaxb bindings -->
+			<binding dir="${binding}" 
+					includes="customfile-server.xml" />
+		</wsimport>
+	</target>
+
+</project>

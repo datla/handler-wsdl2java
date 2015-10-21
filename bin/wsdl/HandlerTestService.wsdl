@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2006 Sun Microsystems, Inc. All rights reserved.
+  SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+-->
+
+<definitions 
+    name="HandlerTestService"
+    targetNamespace="http://HandlerTestService.org/wsdl"
+    xmlns:types="http://HandlerTestService.org/types"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:tns="http://HandlerTestService.org/wsdl"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+
+  <types>
+     <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://HandlerTestService.org/types" targetNamespace="http://HandlerTestService.org/types">
+       <complexType name="MyActionType">
+            <sequence>
+                <element name="inputString" type="xsd:string"/>
+            </sequence>
+       </complexType>
+       <complexType name="MyResultType">
+            <sequence>
+                <element name="outputString" type="xsd:string"/>
+            </sequence>
+       </complexType>
+    </schema>
+  </types>
+
+  <message name="Hello" >
+    <part name="action" type="types:MyActionType" />
+  </message>
+  <message name="HelloResponse">
+    <part name="result" type="types:MyResultType" />
+  </message>
+
+
+  <portType name="HandlerPortType">
+    <operation name="doHandlerTest">
+      <input message="tns:Hello" />
+      <output message="tns:HelloResponse" />
+    </operation>
+  </portType>
+
+  <binding name="HandlerBinding" type="tns:HandlerPortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc" />
+    <operation name="doHandlerTest">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" namespace="http://HandlerTestService.org/wsdl"/>
+      </input>
+      <output>
+        <soap:body use="literal" namespace="http://HandlerTestService.org/wsdl"/>
+      </output>
+    </operation>
+  </binding>
+
+  <service name="HandlerTestService">
+    <port name="HandlerPort" binding="tns:HandlerBinding">
+      <soap:address location="http://localhost:8001/HandlerTestService/jaxws/HandlerTest"/>
+    </port>
+  </service>
+</definitions>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><handler-chains xmlns="http://java.sun.com/xml/ns/javaee">
+  <handler-chain>
+    <handler>
+      <handler-name>ServerLogicalHandler1</handler-name>
+      <handler-class>handlertest.server.ServerLogicalHandler1</handler-class>
+    </handler>
+    <handler>
+      <handler-name>ServerSOAPHandler1</handler-name>
+      <handler-class>handlertest.server.ServerSOAPHandler1</handler-class>
+    </handler>
+  </handler-chain>
+  <handler-chain>
+    <port-name-pattern xmlns:ns1="http://HandlerTestService.org/wsdl">ns1:HandlerPort</port-name-pattern>
+    <handler>
+      <handler-name>ServerLogicalHandler2</handler-name>
+      <handler-class>handlertest.server.ServerLogicalHandler2</handler-class>
+    </handler>
+    <handler>
+      <handler-name>ServerSOAPHandler2</handler-name>
+      <handler-class>handlertest.server.ServerSOAPHandler2</handler-class>
+    </handler>
+  </handler-chain>
+  <handler-chain>
+    <protocol-bindings>##SOAP11_HTTP</protocol-bindings>
+    <handler>
+      <handler-name>ServerLogicalHandler3</handler-name>
+      <handler-class>handlertest.server.ServerLogicalHandler3</handler-class>
+    </handler>
+    <handler>
+      <handler-name>ServerSOAPHandler3</handler-name>
+      <handler-class>handlertest.server.ServerSOAPHandler3</handler-class>
+    </handler>
+  </handler-chain>
+</handler-chains>
